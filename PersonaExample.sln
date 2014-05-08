@@ -1,0 +1,41 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonaExample", "PersonaExample\PersonaExample.csproj", "{57E76E80-1438-4997-99A9-7C9902C2FE60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6A46E8B-8C7A-487A-87EE-B90C193117C5}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		CodeAnalysis.ruleset = CodeAnalysis.ruleset
+		CustomDictionary.xml = CustomDictionary.xml
+		license.md = license.md
+		readme.md = readme.md
+		Settings.StyleCop = Settings.StyleCop
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2DD03947-C238-4EC7-9B0B-BC761681D6C4}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57E76E80-1438-4997-99A9-7C9902C2FE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E76E80-1438-4997-99A9-7C9902C2FE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E76E80-1438-4997-99A9-7C9902C2FE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E76E80-1438-4997-99A9-7C9902C2FE60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
