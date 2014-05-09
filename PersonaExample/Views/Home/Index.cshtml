@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            @: Logged in as @User.Identity.Name
+        }
+        else
+        {
+            @: Unauthenticated
+        }
+    </div>
+    <script src="/scripts/jquery-2.1.0.min.js"></script>
+</body>
+</html>
