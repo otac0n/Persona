@@ -3,6 +3,7 @@
   <Words>
     <Unrecognized />
     <Recognized>
+      <Word>Auth</Word>
       <Word>Mvc</Word>
     </Recognized>
     <Deprecated />

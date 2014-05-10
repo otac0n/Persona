@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyProduct("PersonaExample")]
+[assembly: AssemblyProduct("Persona")]
 [assembly: AssemblyCopyright("Copyright © 2014 John Gietzen")]
 [assembly: ComVisible(false)]
 [assembly: AssemblyVersion("1.0.0.0")]

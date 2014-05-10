@@ -8,23 +8,26 @@
 
 namespace PersonaExample.Controllers
 {
-    using System;
-    using System.Collections.Generic;
+    using System.Configuration;
     using System.Net;
-    using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
-    using System.Web;
     using System.Web.Mvc;
-    using System.Web.Security;
-    using Newtonsoft.Json.Linq;
+    using Persona;
 
     /// <summary>
     /// Provides authentication services.
     /// </summary>
     public class AuthController : AsyncController
     {
-        internal static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private readonly PersonaAuth auth;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// </summary>
+        public AuthController()
+        {
+            this.auth = new PersonaAuth();
+        }
 
         /// <summary>
         /// Verifies an authentication assertion and logs the user in as an asynchronous operation using a task object.
@@ -35,40 +38,14 @@ namespace PersonaExample.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(string assertion)
         {
-            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            var cookie = await this.auth.Login(assertion, ConfigurationManager.AppSettings["PersonaAudience"]);
+            if (cookie == null)
             {
-                { "assertion", assertion },
-                { "audience", this.Request.Url.Scheme + "://" + this.Request.Url.Host + ":" + this.Request.Url.Port },
-            });
-
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.PostAsync("https://verifier.login.persona.org/verify", content))
-                {
-                    response.EnsureSuccessStatusCode();
-                    var resultString = await response.Content.ReadAsStringAsync();
-                    var result = JObject.Parse(resultString);
-                    if ((string)result["status"] == "okay")
-                    {
-                        var token = Convert.ToBase64String(MachineKey.Protect(Encoding.UTF8.GetBytes(resultString), FormsAuthentication.FormsCookieName));
-
-                        this.Response.AppendCookie(new HttpCookie(FormsAuthentication.FormsCookieName)
-                        {
-                            HttpOnly = true,
-                            Secure = this.Request.Url.Scheme == "https",
-                            Path = FormsAuthentication.FormsCookiePath,
-                            Expires = Epoch.AddMilliseconds((double)result["expires"]),
-                            Value = token,
-                        });
-
-                        return new HttpStatusCodeResult(HttpStatusCode.OK, "OK");
-                    }
-                    else
-                    {
-                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
-                    }
-                }
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
             }
+
+            this.Response.AppendCookie(cookie);
+            return new HttpStatusCodeResult(HttpStatusCode.OK, "OK");
         }
 
         /// <summary>
@@ -79,13 +56,10 @@ namespace PersonaExample.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Logout()
         {
-            if (this.Request.Cookies[FormsAuthentication.FormsCookieName] != null)
+            var cookie = this.auth.Logout(this.Request.Cookies);
+            if (cookie != null)
             {
-                this.Response.AppendCookie(new HttpCookie(FormsAuthentication.FormsCookieName)
-                {
-                    Path = FormsAuthentication.FormsCookiePath,
-                    Expires = Epoch,
-                });
+                this.Response.AppendCookie(cookie);
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.OK, "OK");

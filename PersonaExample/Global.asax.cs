@@ -8,17 +8,13 @@
 
 namespace PersonaExample
 {
-    using System;
-    using System.Security.Cryptography;
+    using System.Configuration;
     using System.Security.Principal;
-    using System.Text;
     using System.Threading;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using System.Web.Security;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using Persona;
 
     /// <summary>
     /// The PersonaExample application.
@@ -30,45 +26,12 @@ namespace PersonaExample
         /// </summary>
         protected void Application_AuthenticateRequest()
         {
-            var cookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
-            if (cookie == null)
+            var identity = new PersonaAuth().Authenticate(HttpContext.Current.Request.Cookies, ConfigurationManager.AppSettings["PersonaAudience"]);
+            if (identity != null)
             {
-                return;
+                var roles = new string[0];  // TODO: Get the roles for the given identity.
+                Thread.CurrentPrincipal = HttpContext.Current.User = new GenericPrincipal(identity, roles);
             }
-
-            var email = (string)null;
-            try
-            {
-                var token = cookie.Value;
-                var resultString = Encoding.UTF8.GetString(MachineKey.Unprotect(Convert.FromBase64String(token), FormsAuthentication.FormsCookieName));
-                var result = JObject.Parse(resultString);
-                var expires = Controllers.AuthController.Epoch.AddMilliseconds((double)result["expires"]);
-                if (expires > DateTime.UtcNow)
-                {
-                    email = (string)result["email"];
-                }
-            }
-            catch (ArgumentException)
-            {
-            }
-            catch (CryptographicException)
-            {
-            }
-            catch (FormatException)
-            {
-            }
-            catch (JsonReaderException)
-            {
-            }
-
-            if (email == null)
-            {
-                return;
-            }
-
-            var identity = new GenericIdentity(email);
-
-            Thread.CurrentPrincipal = HttpContext.Current.User = new GenericPrincipal(identity, new string[0]);
         }
 
         /// <summary>
