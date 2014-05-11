@@ -88,7 +88,7 @@ namespace Persona
                     var remaining = (result.Issued + Timeout) - DateTimeOffset.UtcNow;
                     if (result.Status == "okay" && result.Audience == audience && remaining > TimeSpan.Zero)
                     {
-                        if (CookieSecure && remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 2)
+                        if (CookieSecure && remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 4)
                         {
                             result.Issued = DateTimeOffset.UtcNow;
                             newCookie = MakeCookie(result);
