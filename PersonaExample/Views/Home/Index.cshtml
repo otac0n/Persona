@@ -5,6 +5,9 @@
 <html>
 <head>
     <title>Index</title>
+    <script>
+        var Auth = { loggedInUser: @Html.Raw(Json.Encode(User.Identity.IsAuthenticated ? User.Identity.Name : null)) };
+    </script>
 </head>
 <body>
     @Html.AntiForgeryToken()
@@ -12,54 +15,20 @@
         @if (User.Identity.IsAuthenticated)
         {
             @: Logged in as @User.Identity.Name
-            <button id="logout">
+            <button class="logout" type="button">
                 Log Out
             </button>
         }
         else
         {
             @: Unauthenticated
-            <button id="login">
+            <button class="login" type="button">
                 Log In
             </button>
         }
     </div>
     <script src="https://login.persona.org/include.js"></script>
     <script src="/scripts/jquery-2.1.0.min.js"></script>
-    <script>
-        $('#login').click(function () { navigator.id.request(); });
-        $('#logout').click(function () { navigator.id.logout(); });
-
-        var token = { "__RequestVerificationToken": $("[name='__RequestVerificationToken']").val() };
-
-        navigator.id.watch({
-            loggedInUser: @Html.Raw(Json.Encode(User.Identity.IsAuthenticated ? User.Identity.Name : null)),
-            onlogin: function (assertion) {
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("login", "auth")',
-                    data: $.extend({}, token, {
-                        assertion: assertion
-                    }),
-                    success: function (res, status, xhr) { window.location.reload(); },
-                    error: function (xhr, status, err) {
-                        navigator.id.logout();
-                        alert("Login failure: " + err);
-                    }
-                });
-            },
-            onlogout: function () {
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("logout", "auth")',
-                    data: $.extend({}, token),
-                    success: function (res, status, xhr) { window.location.reload(); },
-                    error: function (xhr, status, err) {
-                        alert("Logout failure: " + err);
-                    }
-                });
-            }
-        });
-    </script>
+    <script src="/scripts/persona.js"></script>
 </body>
 </html>
