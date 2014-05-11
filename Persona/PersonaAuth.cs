@@ -18,7 +18,7 @@ namespace Persona
     using System.Web;
     using System.Web.Security;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Provides BrowserID authentication services using the Mozilla Persona implementation.
@@ -120,11 +120,10 @@ namespace Persona
                 using (var response = await client.PostAsync("https://verifier.login.persona.org/verify", content))
                 {
                     response.EnsureSuccessStatusCode();
-                    var resultString = await response.Content.ReadAsStringAsync();
-                    var result = VerifyResult.Parse(resultString);
+                    var result = VerifyResult.Parse(await response.Content.ReadAsStringAsync());
                     if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
                     {
-                        return new HttpCookie(CookieName, Protect(resultString))
+                        return new HttpCookie(CookieName, Protect(result.ToString()))
                         {
                             Domain = CookieDomain,
                             Path = CookiePath,
@@ -174,12 +173,11 @@ namespace Persona
 
         private class VerifyResult
         {
-            private static readonly DateTimeOffset Epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
-
             public string Audience { get; set; }
 
             public string Email { get; set; }
 
+            [JsonConverter(typeof(UnixEpochDateTimeConverter))]
             public DateTimeOffset? Expires { get; set; }
 
             public string Issuer { get; set; }
@@ -190,17 +188,15 @@ namespace Persona
 
             public static VerifyResult Parse(string json)
             {
-                var obj = JObject.Parse(json);
+                return JsonConvert.DeserializeObject<VerifyResult>(json);
+            }
 
-                return new VerifyResult
+            public override string ToString()
+            {
+                return JsonConvert.SerializeObject(this, new JsonSerializerSettings
                 {
-                    Audience = (string)obj["audience"],
-                    Email = (string)obj["email"],
-                    Expires = obj["expires"] != null ? Epoch.AddMilliseconds((double)obj["expires"]) : default(DateTimeOffset?),
-                    Issuer = (string)obj["issuer"],
-                    Reason = (string)obj["reason"],
-                    Status = (string)obj["status"],
-                };
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                });
             }
         }
     }
