@@ -30,6 +30,7 @@ namespace Persona
             CookieDomain = "";
             CookiePath = "/";
             CookieName = "AuthToken";
+            Timeout = TimeSpan.FromHours(1);
         }
 
         /// <summary>
@@ -46,6 +47,11 @@ namespace Persona
         /// Gets or sets the value of the path of the authentication token cookie.
         /// </summary>
         public static string CookiePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout of the authentication token cookie.
+        /// </summary>
+        public static TimeSpan Timeout { get; set; }
 
         /// <summary>
         /// Authenticates an HTTP request's cookies.
@@ -70,7 +76,7 @@ namespace Persona
                 try
                 {
                     var result = VerifyResult.Parse(Unprotect(cookie.Value));
-                    if (result.Status == "okay" && result.Audience == audience)
+                    if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
                     {
                         return new GenericIdentity(result.Email);
                     }
@@ -123,8 +129,11 @@ namespace Persona
                     var result = VerifyResult.Parse(await response.Content.ReadAsStringAsync());
                     if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
                     {
+                        result.Expires = DateTimeOffset.Now + Timeout;
+
                         return new HttpCookie(CookieName, Protect(result.ToString()))
                         {
+                            Expires = result.Expires.Value.UtcDateTime,
                             Domain = CookieDomain,
                             Path = CookiePath,
                             HttpOnly = true,
