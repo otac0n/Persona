@@ -9,6 +9,7 @@
     <tags>BrowserID Persona</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="4.0" />
+      <dependency id="Microsoft.AspNet.Mvc" version="5.0" />
     </dependencies>
   </metadata>
 </package>
