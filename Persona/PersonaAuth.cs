@@ -30,6 +30,7 @@ namespace Persona
             CookieDomain = "";
             CookiePath = "/";
             CookieName = "AuthToken";
+            CookieSecure = false;
             Timeout = TimeSpan.FromHours(1);
         }
 
@@ -47,6 +48,11 @@ namespace Persona
         /// Gets or sets the value of the path of the authentication token cookie.
         /// </summary>
         public static string CookiePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not the authentication token cookie is only sent over HTTPS.
+        /// </summary>
+        public static bool CookieSecure { get; set; }
 
         /// <summary>
         /// Gets or sets the timeout of the authentication token cookie.
@@ -82,7 +88,7 @@ namespace Persona
                     var remaining = result.Expires - DateTimeOffset.UtcNow;
                     if (result.Status == "okay" && result.Audience == audience && remaining > TimeSpan.Zero)
                     {
-                        if (remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 2)
+                        if (CookieSecure && remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 2)
                         {
                             result.Expires = DateTimeOffset.UtcNow + Timeout;
                             newCookie = MakeCookie(result);
@@ -176,7 +182,8 @@ namespace Persona
                 Expires = DateTime.UtcNow.AddYears(-1),
                 Domain = CookieDomain,
                 Path = CookiePath,
-                HttpOnly = false,
+                HttpOnly = true,
+                Secure = false,
             };
         }
 
@@ -188,6 +195,7 @@ namespace Persona
                 Domain = CookieDomain,
                 Path = CookiePath,
                 HttpOnly = true,
+                Secure = CookieSecure,
             };
         }
 
