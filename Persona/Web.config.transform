@@ -1,7 +1,4 @@
 ﻿<configuration>
-  <appSettings>
-    <add key="PersonaAudience" value="http://localhost:80" />
-  </appSettings>
   <system.web>
     <authentication mode="Forms">
       <forms loginUrl="~/auth" />

@@ -9,7 +9,6 @@
 namespace PersonaExample.Controllers
 {
     using System;
-    using System.Configuration;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -67,7 +66,7 @@ namespace PersonaExample.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(string assertion)
         {
-            var cookie = await this.auth.Login(assertion, ConfigurationManager.AppSettings["PersonaAudience"]);
+            var cookie = await this.auth.Login(assertion);
             if (cookie == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");

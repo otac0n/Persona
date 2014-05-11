@@ -36,6 +36,11 @@ namespace Persona
         }
 
         /// <summary>
+        /// Gets or sets the protocol, domain name, and port of your site. For example, "https://example.com:443".
+        /// </summary>
+        public static string Audience { get; set; }
+
+        /// <summary>
         /// Gets or sets the value of the domain of the authentication token cookie.
         /// </summary>
         public static string CookieDomain { get; set; }
@@ -64,18 +69,13 @@ namespace Persona
         /// Authenticates an HTTP request's cookies.
         /// </summary>
         /// <param name="cookies">The cookie collection containing the authentication token to validate.</param>
-        /// <param name="audience">The protocol, domain name, and port of your site. For example, "https://example.com:443".</param>
         /// <param name="newCookie">An updated cookie.</param>
         /// <returns>The <see cref="IIdentity"/> of the authenticated user, or null if authentication failed.</returns>
-        public virtual IIdentity Authenticate(HttpCookieCollection cookies, string audience, out HttpCookie newCookie)
+        public virtual IIdentity Authenticate(HttpCookieCollection cookies, out HttpCookie newCookie)
         {
             if (cookies == null)
             {
                 throw new ArgumentNullException("cookies");
-            }
-            else if (audience == null)
-            {
-                throw new ArgumentNullException("audience");
             }
 
             newCookie = null;
@@ -87,7 +87,7 @@ namespace Persona
                 {
                     var result = VerifyResult.Parse(Unprotect(cookie.Value));
                     var remaining = (result.Issued + Timeout) - DateTimeOffset.UtcNow;
-                    if (result.Status == "okay" && result.Audience == audience && remaining > TimeSpan.Zero)
+                    if (result.Status == "okay" && result.Audience == Audience && remaining > TimeSpan.Zero)
                     {
                         if (CookieSecure && remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 4)
                         {
@@ -121,15 +121,10 @@ namespace Persona
         /// Verifies the specified assertion and creates an authentication token as an asynchronous operation using a task object.
         /// </summary>
         /// <param name="assertion">The assertion supplied by the user.</param>
-        /// <param name="audience">The protocol, domain name, and port of your site. For example, "https://example.com:443".</param>
         /// <returns>The task representing the asynchronous operation.</returns>
-        public virtual async Task<HttpCookie> Login(string assertion, string audience)
+        public virtual async Task<HttpCookie> Login(string assertion)
         {
-            if (audience == null)
-            {
-                throw new ArgumentNullException("audience");
-            }
-            else if (string.IsNullOrEmpty(assertion))
+            if (string.IsNullOrEmpty(assertion))
             {
                 return null;
             }
@@ -137,7 +132,7 @@ namespace Persona
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "assertion", assertion },
-                { "audience", audience },
+                { "audience", Audience },
             });
 
             using (var client = new HttpClient())
@@ -146,7 +141,7 @@ namespace Persona
                 {
                     response.EnsureSuccessStatusCode();
                     var result = VerifyResult.Parse(await response.Content.ReadAsStringAsync());
-                    if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
+                    if (result.Status == "okay" && result.Audience == Audience && result.Expires > DateTimeOffset.UtcNow)
                     {
                         result.Issued = DateTimeOffset.UtcNow;
                         return MakeCookie(result);

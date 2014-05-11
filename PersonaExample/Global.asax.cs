@@ -8,7 +8,6 @@
 
 namespace PersonaExample
 {
-    using System.Configuration;
     using System.Web;
     using System.Web.Helpers;
     using System.Web.Mvc;
@@ -25,7 +24,8 @@ namespace PersonaExample
         /// </summary>
         protected virtual void Application_Start()
         {
-            GlobalFilters.Filters.Add(new PersonaAuthenticationFilter(ConfigurationManager.AppSettings["PersonaAudience"]));
+            PersonaAuth.Audience = "http://localhost:57186";
+            GlobalFilters.Filters.Add(new PersonaAuthenticationFilter());
             AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);

@@ -19,16 +19,6 @@ namespace Persona
     /// </summary>
     public class PersonaAuthenticationFilter : IAuthorizationFilter
     {
-        private readonly string audience;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PersonaAuthenticationFilter"/> class.
-        /// </summary>
-        public PersonaAuthenticationFilter(string audience)
-        {
-            this.audience = audience;
-        }
-
         /// <summary>
         /// Called when authorization is required.
         /// </summary>
@@ -41,7 +31,7 @@ namespace Persona
             }
 
             HttpCookie newCookie;
-            var identity = new PersonaAuth().Authenticate(filterContext.HttpContext.Request.Cookies, audience, out newCookie);
+            var identity = new PersonaAuth().Authenticate(filterContext.HttpContext.Request.Cookies, out newCookie);
 
             if (identity != null)
             {
