@@ -12,6 +12,7 @@ namespace PersonaExample
     using System.Security.Principal;
     using System.Threading;
     using System.Web;
+    using System.Web.Helpers;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Persona;
@@ -46,6 +47,7 @@ namespace PersonaExample
         /// </summary>
         protected void Application_Start()
         {
+            AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
