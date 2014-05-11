@@ -4,6 +4,7 @@
     <RemoveDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg" />
     <MakeDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg;obj\$(Configuration)\pkg\content;obj\$(Configuration)\pkg\content\App_Start;obj\$(Configuration)\pkg\content\Controllers;obj\$(Configuration)\pkg\content\Scripts;obj\$(Configuration)\pkg\content\View;obj\$(Configuration)\pkg\content\View\Auth;obj\$(Configuration)\pkg\lib" />
     <Copy SourceFiles="..\license.md" DestinationFolder="obj\$(Configuration)\pkg" />
+    <Copy SourceFiles="readme.txt" DestinationFolder="obj\$(Configuration)\pkg" />
     <Copy SourceFiles="Web.config.transform" DestinationFolder="obj\$(Configuration)\pkg\content" />
     <Copy SourceFiles="..\PersonaExample\Scripts\persona.js" DestinationFolder="obj\$(Configuration)\pkg\content\Scripts" />
     <Copy SourceFiles="..\PersonaExample\Views\Auth\Index.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\View\Auth" />

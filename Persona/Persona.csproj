@@ -94,6 +94,7 @@
     <None Include="Package.msbuild" />
     <None Include="packages.config" />
     <None Include="Persona.nuspec" />
+    <None Include="readme.txt" />
     <None Include="Web.config.transform" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
