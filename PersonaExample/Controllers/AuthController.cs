@@ -8,6 +8,7 @@
 
 namespace PersonaExample.Controllers
 {
+    using System;
     using System.Configuration;
     using System.Net;
     using System.Threading.Tasks;
@@ -27,6 +28,34 @@ namespace PersonaExample.Controllers
         public AuthController()
         {
             this.auth = new PersonaAuth();
+        }
+
+        /// <summary>
+        /// Provides a page where anonymous users can log in.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>A result indicating the response to the user.</returns>
+        public ActionResult Index(string returnUrl = null)
+        {
+            Uri uri = null;
+            if (returnUrl != null)
+            {
+                Uri.TryCreate(returnUrl, UriKind.Relative, out uri);
+            }
+
+            if (uri == null && returnUrl != null)
+            {
+                return this.RedirectToAction("index", "auth");
+            }
+
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return uri != null
+                    ? this.Redirect(uri.ToString())
+                    : this.Redirect("~/");
+            }
+
+            return this.View();
         }
 
         /// <summary>

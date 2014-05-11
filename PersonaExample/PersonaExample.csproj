@@ -109,6 +109,7 @@
     <Content Include="Scripts\jquery-2.1.0.min.map" />
     <Content Include="Scripts\persona.js" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Auth\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\LockedDown.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
