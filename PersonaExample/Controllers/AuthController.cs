@@ -44,6 +44,7 @@ namespace PersonaExample.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Bad Request");
             }
 
+            this.Response.Cookies.Remove(PersonaAuth.CookieName);
             this.Response.AppendCookie(cookie);
             return new HttpStatusCodeResult(HttpStatusCode.OK, "OK");
         }
@@ -59,6 +60,7 @@ namespace PersonaExample.Controllers
             var cookie = this.auth.Logout(this.Request.Cookies);
             if (cookie != null)
             {
+                this.Response.Cookies.Remove(PersonaAuth.CookieName);
                 this.Response.AppendCookie(cookie);
             }
 

@@ -26,11 +26,18 @@ namespace PersonaExample
         /// </summary>
         protected void Application_AuthenticateRequest()
         {
-            var identity = new PersonaAuth().Authenticate(HttpContext.Current.Request.Cookies, ConfigurationManager.AppSettings["PersonaAudience"]);
+            HttpCookie newCookie;
+            var identity = new PersonaAuth().Authenticate(HttpContext.Current.Request.Cookies, ConfigurationManager.AppSettings["PersonaAudience"], out newCookie);
+
             if (identity != null)
             {
                 var roles = new string[0];  // TODO: Get the roles for the given identity.
                 Thread.CurrentPrincipal = HttpContext.Current.User = new GenericPrincipal(identity, roles);
+            }
+
+            if (newCookie != null)
+            {
+                HttpContext.Current.Response.AppendCookie(newCookie);
             }
         }
 

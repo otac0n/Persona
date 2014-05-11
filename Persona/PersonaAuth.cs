@@ -58,8 +58,9 @@ namespace Persona
         /// </summary>
         /// <param name="cookies">The cookie collection containing the authentication token to validate.</param>
         /// <param name="audience">The protocol, domain name, and port of your site. For example, "https://example.com:443".</param>
+        /// <param name="newCookie">An updated cookie.</param>
         /// <returns>The <see cref="IIdentity"/> of the authenticated user, or null if authentication failed.</returns>
-        public IIdentity Authenticate(HttpCookieCollection cookies, string audience)
+        public IIdentity Authenticate(HttpCookieCollection cookies, string audience, out HttpCookie newCookie)
         {
             if (cookies == null)
             {
@@ -70,14 +71,23 @@ namespace Persona
                 throw new ArgumentNullException("audience");
             }
 
+            newCookie = null;
+
             var cookie = cookies[CookieName];
             if (cookie != null)
             {
                 try
                 {
                     var result = VerifyResult.Parse(Unprotect(cookie.Value));
-                    if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
+                    var remaining = result.Expires - DateTimeOffset.UtcNow;
+                    if (result.Status == "okay" && result.Audience == audience && remaining > TimeSpan.Zero)
                     {
+                        if (remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 2)
+                        {
+                            result.Expires = DateTimeOffset.UtcNow + Timeout;
+                            newCookie = MakeCookie(result);
+                        }
+
                         return new GenericIdentity(result.Email);
                     }
                 }
@@ -93,6 +103,8 @@ namespace Persona
                 catch (JsonReaderException)
                 {
                 }
+
+                newCookie = ExpireCookie();
             }
 
             return null;
@@ -129,15 +141,8 @@ namespace Persona
                     var result = VerifyResult.Parse(await response.Content.ReadAsStringAsync());
                     if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
                     {
-                        result.Expires = DateTimeOffset.Now + Timeout;
-
-                        return new HttpCookie(CookieName, Protect(result.ToString()))
-                        {
-                            Expires = result.Expires.Value.UtcDateTime,
-                            Domain = CookieDomain,
-                            Path = CookiePath,
-                            HttpOnly = true,
-                        };
+                        result.Expires = DateTimeOffset.UtcNow + Timeout;
+                        return MakeCookie(result);
                     }
                 }
             }
@@ -161,12 +166,28 @@ namespace Persona
                 return null;
             }
 
+            return ExpireCookie();
+        }
+
+        private static HttpCookie ExpireCookie()
+        {
             return new HttpCookie(CookieName)
             {
                 Expires = DateTime.UtcNow.AddYears(-1),
                 Domain = CookieDomain,
                 Path = CookiePath,
                 HttpOnly = false,
+            };
+        }
+
+        private static HttpCookie MakeCookie(VerifyResult result)
+        {
+            return new HttpCookie(CookieName, Protect(result.ToString()))
+            {
+                Expires = result.Expires.UtcDateTime,
+                Domain = CookieDomain,
+                Path = CookiePath,
+                HttpOnly = true,
             };
         }
 
@@ -187,7 +208,7 @@ namespace Persona
             public string Email { get; set; }
 
             [JsonConverter(typeof(UnixEpochDateTimeConverter))]
-            public DateTimeOffset? Expires { get; set; }
+            public DateTimeOffset Expires { get; set; }
 
             public string Issuer { get; set; }
 
