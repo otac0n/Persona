@@ -9,10 +9,8 @@
 namespace PersonaExample
 {
     using System.Web;
-    using System.Web.Helpers;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Persona;
 
     /// <summary>
     /// The PersonaExample application.
@@ -24,9 +22,6 @@ namespace PersonaExample
         /// </summary>
         protected virtual void Application_Start()
         {
-            PersonaAuth.Audience = "http://localhost:57186";
-            GlobalFilters.Filters.Add(new PersonaAuthenticationFilter());
-            AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }

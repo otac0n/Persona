@@ -2,7 +2,7 @@
   <Import Project="$(SolutionDir)Version.msbuild" />
   <Target Name="AfterBuild">
     <RemoveDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg" />
-    <MakeDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg;obj\$(Configuration)\pkg\content;obj\$(Configuration)\pkg\content\Controllers;obj\$(Configuration)\pkg\content\Scripts;obj\$(Configuration)\pkg\content\View;obj\$(Configuration)\pkg\content\View\Auth;obj\$(Configuration)\pkg\lib" />
+    <MakeDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg;obj\$(Configuration)\pkg\content;obj\$(Configuration)\pkg\content\App_Start;obj\$(Configuration)\pkg\content\Controllers;obj\$(Configuration)\pkg\content\Scripts;obj\$(Configuration)\pkg\content\View;obj\$(Configuration)\pkg\content\View\Auth;obj\$(Configuration)\pkg\lib" />
     <Copy SourceFiles="..\license.md" DestinationFolder="obj\$(Configuration)\pkg" />
     <Copy SourceFiles="Web.config.transform" DestinationFolder="obj\$(Configuration)\pkg\content" />
     <Copy SourceFiles="..\PersonaExample\Scripts\persona.js" DestinationFolder="obj\$(Configuration)\pkg\content\Scripts" />
@@ -13,7 +13,9 @@
     <PropertyGroup>
       <AuthController>$([System.IO.File]::ReadAllText("..\PersonaExample\Controllers\AuthController.cs").Replace("PersonaExample", "$rootnamespace$"))</AuthController>
       <NuSpec>$([System.IO.File]::ReadAllText("Persona.nuspec").Replace("$version$", $(PersonaVersion)).Replace("$version-short$", $(PersonaVersionShort)))</NuSpec>
+      <PersonaConfig>$([System.IO.File]::ReadAllText("..\PersonaExample\App_Start\PersonaConfig.cs").Replace("PersonaExample", "$rootnamespace$").Replace("// #", "#"))</PersonaConfig>
     </PropertyGroup>
+    <WriteLinesToFile Overwrite="true" File="obj\$(Configuration)\pkg\content\App_Start\PersonaConfig.cs.pp" Lines="$(PersonaConfig)" />
     <WriteLinesToFile Overwrite="true" File="obj\$(Configuration)\pkg\content\Controllers\AuthController.cs.pp" Lines="$(AuthController)" />
     <WriteLinesToFile Overwrite="true" File="obj\$(Configuration)\pkg\Persona.nuspec" Lines="$(NuSpec)" />
     <Exec Command="$(SolutionDir).nuget\NuGet.exe pack obj\$(Configuration)\pkg\Persona.nuspec -NoPackageAnalysis -NonInteractive -OutputDir $(OutputPath)" />
