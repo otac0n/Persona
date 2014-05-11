@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Persona</id>
+    <version>$version$</version>
+    <authors>John Gietzen</authors>
+    <owners>John Gietzen</owners>
+    <description>An implementation of the BrowserID protocol, leveraging Mozilla's Persona implementation.</description>
+    <tags>BrowserID Persona</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="4.0" />
+    </dependencies>
+  </metadata>
+</package>

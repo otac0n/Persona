@@ -62,7 +62,10 @@
     <Compile Include="UnixEpochDateTimeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Package.msbuild" />
     <None Include="packages.config" />
+    <None Include="Persona.nuspec" />
+    <None Include="Web.config.transform" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.Targets" Condition="Exists('$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.Targets')" />

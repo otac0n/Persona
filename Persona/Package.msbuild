@@ -1,0 +1,21 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)Version.msbuild" />
+  <Target Name="AfterBuild">
+    <RemoveDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg" />
+    <MakeDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg;obj\$(Configuration)\pkg\content;obj\$(Configuration)\pkg\content\Controllers;obj\$(Configuration)\pkg\content\Scripts;obj\$(Configuration)\pkg\content\View;obj\$(Configuration)\pkg\content\View\Auth;obj\$(Configuration)\pkg\lib" />
+    <Copy SourceFiles="..\license.md" DestinationFolder="obj\$(Configuration)\pkg" />
+    <Copy SourceFiles="Web.config.transform" DestinationFolder="obj\$(Configuration)\pkg\content" />
+    <Copy SourceFiles="..\PersonaExample\Scripts\persona.js" DestinationFolder="obj\$(Configuration)\pkg\content\Scripts" />
+    <Copy SourceFiles="..\PersonaExample\Views\Auth\Index.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\View\Auth" />
+    <Copy SourceFiles="bin\$(Configuration)\Persona.dll" DestinationFolder="obj\$(Configuration)\pkg\lib" />
+    <Copy SourceFiles="bin\$(Configuration)\Persona.pdb" DestinationFolder="obj\$(Configuration)\pkg\lib" />
+    <Copy SourceFiles="bin\$(Configuration)\Persona.xml" DestinationFolder="obj\$(Configuration)\pkg\lib" />
+    <PropertyGroup>
+      <AuthController>$([System.IO.File]::ReadAllText("..\PersonaExample\Controllers\AuthController.cs").Replace("PersonaExample", "$rootnamespace$"))</AuthController>
+      <NuSpec>$([System.IO.File]::ReadAllText("Persona.nuspec").Replace("$version$", $(PersonaVersion)).Replace("$version-short$", $(PersonaVersionShort)))</NuSpec>
+    </PropertyGroup>
+    <WriteLinesToFile Overwrite="true" File="obj\$(Configuration)\pkg\content\Controllers\AuthController.cs.pp" Lines="$(AuthController)" />
+    <WriteLinesToFile Overwrite="true" File="obj\$(Configuration)\pkg\Persona.nuspec" Lines="$(NuSpec)" />
+    <Exec Command="$(SolutionDir).nuget\NuGet.exe pack obj\$(Configuration)\pkg\Persona.nuspec -NoPackageAnalysis -NonInteractive -OutputDir $(OutputPath)" />
+  </Target>
+</Project>
