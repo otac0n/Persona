@@ -191,7 +191,6 @@ namespace Persona
         {
             return new HttpCookie(CookieName, Protect(result.ToString()))
             {
-                Expires = (result.Issued + Timeout).UtcDateTime,
                 Domain = CookieDomain,
                 Path = CookiePath,
                 HttpOnly = true,
