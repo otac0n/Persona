@@ -85,12 +85,12 @@ namespace Persona
                 try
                 {
                     var result = VerifyResult.Parse(Unprotect(cookie.Value));
-                    var remaining = result.Expires - DateTimeOffset.UtcNow;
+                    var remaining = (result.Issued + Timeout) - DateTimeOffset.UtcNow;
                     if (result.Status == "okay" && result.Audience == audience && remaining > TimeSpan.Zero)
                     {
                         if (CookieSecure && remaining.TotalMilliseconds < Timeout.TotalMilliseconds / 2)
                         {
-                            result.Expires = DateTimeOffset.UtcNow + Timeout;
+                            result.Issued = DateTimeOffset.UtcNow;
                             newCookie = MakeCookie(result);
                         }
 
@@ -147,7 +147,7 @@ namespace Persona
                     var result = VerifyResult.Parse(await response.Content.ReadAsStringAsync());
                     if (result.Status == "okay" && result.Audience == audience && result.Expires > DateTimeOffset.UtcNow)
                     {
-                        result.Expires = DateTimeOffset.UtcNow + Timeout;
+                        result.Issued = DateTimeOffset.UtcNow;
                         return MakeCookie(result);
                     }
                 }
@@ -191,7 +191,7 @@ namespace Persona
         {
             return new HttpCookie(CookieName, Protect(result.ToString()))
             {
-                Expires = result.Expires.UtcDateTime,
+                Expires = (result.Issued + Timeout).UtcDateTime,
                 Domain = CookieDomain,
                 Path = CookiePath,
                 HttpOnly = true,
@@ -217,6 +217,9 @@ namespace Persona
 
             [JsonConverter(typeof(UnixEpochDateTimeConverter))]
             public DateTimeOffset Expires { get; set; }
+
+            [JsonConverter(typeof(UnixEpochDateTimeConverter))]
+            public DateTimeOffset Issued { get; set; }
 
             public string Issuer { get; set; }
 
