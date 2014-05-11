@@ -1,34 +1,17 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "Index";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Index</title>
-    <script>
-        var Auth = { loggedInUser: @Html.Raw(Json.Encode(User.Identity.IsAuthenticated ? User.Identity.Name : null)) };
-    </script>
-</head>
-<body>
-    @Html.AntiForgeryToken()
-    <div>
-        @if (User.Identity.IsAuthenticated)
-        {
-            @: Logged in as @User.Identity.Name
-            <button class="logout" type="button">
-                Log Out
-            </button>
-        }
-        else
-        {
-            @: Unauthenticated
-            <button class="login" type="button">
-                Log In
-            </button>
-        }
-    </div>
-    <script src="https://login.persona.org/include.js"></script>
-    <script src="/scripts/jquery-2.1.0.min.js"></script>
-    <script src="/scripts/persona.js"></script>
-</body>
-</html>
+@if (User.Identity.IsAuthenticated)
+{
+    @: Logged in as @User.Identity.Name
+    <button class="logout" type="button">
+        Log Out
+    </button>
+}
+else
+{
+    @: Unauthenticated
+    <button class="login" type="button">
+        Log In
+    </button>
+}
