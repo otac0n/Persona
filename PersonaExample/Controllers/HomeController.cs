@@ -23,5 +23,15 @@ namespace PersonaExample.Controllers
         {
             return this.View();
         }
+
+        /// <summary>
+        /// An example restricted action.
+        /// </summary>
+        /// <returns>A <see cref="ViewResult"/> object.</returns>
+        [Authorize]
+        public ActionResult LockedDown()
+        {
+            return this.View();
+        }
     }
 }
