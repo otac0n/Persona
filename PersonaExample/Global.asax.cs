@@ -25,7 +25,7 @@ namespace PersonaExample
         /// <summary>
         /// Authenticates the request.
         /// </summary>
-        protected void Application_AuthenticateRequest()
+        protected virtual void Application_AuthenticateRequest()
         {
             HttpCookie newCookie;
             var identity = new PersonaAuth().Authenticate(HttpContext.Current.Request.Cookies, ConfigurationManager.AppSettings["PersonaAudience"], out newCookie);
@@ -45,7 +45,7 @@ namespace PersonaExample
         /// <summary>
         /// Starts the application.
         /// </summary>
-        protected void Application_Start()
+        protected virtual void Application_Start()
         {
             AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
             AreaRegistration.RegisterAllAreas();

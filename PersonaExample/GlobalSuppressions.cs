@@ -2,4 +2,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Microsoft.Design", "CA1014:MarkAssembliesWithClsCompliant", Justification = "Not reasonable for ASP.NET applications.")]
-[assembly: SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "PersonaExample.MvcApplication.#Application_Start()", Justification = "Required by ASP.NET.")]
+[assembly: SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Scope = "member", Target = "PersonaExample.Controllers.AuthController.#Index(System.String)", Justification = "This comes in via the query string.")]

@@ -10,6 +10,7 @@ namespace Persona
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Net.Http;
     using System.Security.Cryptography;
     using System.Security.Principal;
@@ -66,7 +67,7 @@ namespace Persona
         /// <param name="audience">The protocol, domain name, and port of your site. For example, "https://example.com:443".</param>
         /// <param name="newCookie">An updated cookie.</param>
         /// <returns>The <see cref="IIdentity"/> of the authenticated user, or null if authentication failed.</returns>
-        public IIdentity Authenticate(HttpCookieCollection cookies, string audience, out HttpCookie newCookie)
+        public virtual IIdentity Authenticate(HttpCookieCollection cookies, string audience, out HttpCookie newCookie)
         {
             if (cookies == null)
             {
@@ -122,7 +123,7 @@ namespace Persona
         /// <param name="assertion">The assertion supplied by the user.</param>
         /// <param name="audience">The protocol, domain name, and port of your site. For example, "https://example.com:443".</param>
         /// <returns>The task representing the asynchronous operation.</returns>
-        public async Task<HttpCookie> Login(string assertion, string audience)
+        public virtual async Task<HttpCookie> Login(string assertion, string audience)
         {
             if (audience == null)
             {
@@ -161,7 +162,7 @@ namespace Persona
         /// </summary>
         /// <param name="cookies">The cookie collection of the request.</param>
         /// <returns>A cookie, if the request contains an authentication token; null, otherwise.</returns>
-        public HttpCookie Logout(HttpCookieCollection cookies)
+        public virtual HttpCookie Logout(HttpCookieCollection cookies)
         {
             if (cookies == null)
             {
@@ -208,6 +209,7 @@ namespace Persona
             return Encoding.UTF8.GetString(MachineKey.Unprotect(Convert.FromBase64String(value), CookieName));
         }
 
+        [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "This is instantiated by the JSON parser.")]
         private class VerifyResult
         {
             public string Audience { get; set; }

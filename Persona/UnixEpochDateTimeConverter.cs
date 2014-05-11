@@ -9,6 +9,8 @@
 namespace Persona
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
@@ -16,6 +18,8 @@ namespace Persona
     {
         private static readonly DateTimeOffset Epoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "This is not exposed publicly.")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "This is not exposed publicly.")]
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var nullable = objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -27,7 +31,7 @@ namespace Persona
             {
                 if (!nullable)
                 {
-                    throw new JsonSerializationException(string.Format("Cannot convert null value to {0}.", objectType));
+                    throw new JsonSerializationException(string.Format(CultureInfo.InvariantCulture, "Cannot convert null value to {0}.", objectType));
                 }
 
                 return null;
@@ -43,7 +47,7 @@ namespace Persona
             }
             else if (reader.TokenType != JsonToken.Float && reader.TokenType != JsonToken.Integer)
             {
-                throw new JsonSerializationException(string.Format("Unexpected token parsing date. Expected Float or Integer, got {0}.", reader.TokenType));
+                throw new JsonSerializationException(string.Format(CultureInfo.InvariantCulture, "Unexpected token parsing date. Expected Float or Integer, got {0}.", reader.TokenType));
             }
             else
             {
@@ -55,6 +59,10 @@ namespace Persona
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "This is not exposed publicly.")]
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1", Justification = "This is not exposed publicly.")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DateTime", Justification = "This is spelled correctly.")]
+        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DateTimeOffset", Justification = "This is spelled correctly.")]
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             if (value is DateTime)
@@ -67,7 +75,7 @@ namespace Persona
             }
             else
             {
-                throw new JsonSerializationException(string.Format("Unexpected value when converting date. Expected DateTime or DateTimeOffset, got {0}.", value.GetType()));
+                throw new JsonSerializationException(string.Format(CultureInfo.InvariantCulture, "Unexpected value when converting date. Expected DateTime or DateTimeOffset, got {0}.", value.GetType()));
             }
         }
     }
