@@ -7,8 +7,8 @@
     <Copy SourceFiles="readme.txt" DestinationFolder="obj\$(Configuration)\pkg" />
     <Copy SourceFiles="Web.config.transform" DestinationFolder="obj\$(Configuration)\pkg\content" />
     <Copy SourceFiles="..\PersonaExample\Scripts\persona.js" DestinationFolder="obj\$(Configuration)\pkg\content\Scripts" />
-    <Copy SourceFiles="..\PersonaExample\Views\Auth\Index.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\View\Auth" />
-    <Copy SourceFiles="..\PersonaExample\Views\Auth\Token.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\View\Auth" />
+    <Copy SourceFiles="..\PersonaExample\Views\Auth\Index.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\Views\Auth" />
+    <Copy SourceFiles="..\PersonaExample\Views\Auth\Token.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\Views\Auth" />
     <Copy SourceFiles="bin\$(Configuration)\Persona.dll" DestinationFolder="obj\$(Configuration)\pkg\lib" />
     <Copy SourceFiles="bin\$(Configuration)\Persona.pdb" DestinationFolder="obj\$(Configuration)\pkg\lib" />
     <Copy SourceFiles="bin\$(Configuration)\Persona.xml" DestinationFolder="obj\$(Configuration)\pkg\lib" />
