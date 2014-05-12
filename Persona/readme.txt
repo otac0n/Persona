@@ -2,7 +2,7 @@
 
     @Html.AntiForgeryToken()
     <script>
-        Auth = Auth || {};
+        var Auth = Auth || {};
         Auth.loggedInUser = @Html.Raw(Json.Encode(User.Identity.IsAuthenticated ? User.Identity.Name : null));
     </script>
     <script src="https://login.persona.org/include.js"></script>

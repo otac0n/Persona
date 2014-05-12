@@ -3,7 +3,7 @@
 <head>
     <title>@ViewBag.Title</title>
     <script>
-        Auth = Auth || {};
+        var Auth = Auth || {};
         Auth.loggedInUser = @Html.Raw(Json.Encode(User.Identity.IsAuthenticated ? User.Identity.Name : null));
         Auth.error = function (err, action) {
             alert(action + ': ' + err);

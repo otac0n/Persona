@@ -1,4 +1,4 @@
-﻿Auth = Auth || {};
+﻿var Auth = Auth || {};
 (function ($, undefined) {
     $(function () {
         $('.login').click(function () { navigator.id.request(); });
