@@ -1,6 +1,13 @@
 ﻿@{
     ViewBag.Title = "Log In";
+    var returnUrl = (Uri)ViewBag.ReturnUrl;
 }
 <button class="login" type="button">
     Log In
 </button>
+<script>
+    var Auth = Auth || {};
+    Auth.success = function () {
+        window.location = @Html.Raw(Json.Encode(returnUrl.ToString()));
+    }
+</script>

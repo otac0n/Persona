@@ -47,13 +47,7 @@ namespace PersonaExample.Controllers
                 return this.RedirectToAction("index", "auth");
             }
 
-            if (this.User.Identity.IsAuthenticated)
-            {
-                return uri != null
-                    ? this.Redirect(uri.ToString())
-                    : this.Redirect("~/");
-            }
-
+            ViewBag.ReturnUrl = uri ?? new Uri(this.Url.Content("~/"), UriKind.Relative);
             return this.View();
         }
 
