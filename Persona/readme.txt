@@ -4,6 +4,11 @@
     <script>
         var Auth = Auth || {};
         Auth.loggedInUser = @Html.Raw(Json.Encode(User.Identity.IsAuthenticated ? User.Identity.Name : null));
+
+        $(function () {
+            $(".login").click(function () { navigator.id.request(); });
+            $(".logout").click(function () { navigator.id.logout(); });
+        });
     </script>
     <script src="https://login.persona.org/include.js"></script>
     <script src="/scripts/persona.js"></script>

@@ -7,8 +7,6 @@
         error: function (err, action) {
             window.location.reload(true);
         },
-        loginSelector: '.login',
-        logoutSelector: '.logout',
         loginUrl: '/auth/login',
         logoutUrl: '/auth/logout'
     };
@@ -17,11 +15,6 @@
             Auth[k] = defaults[k];
         }
     }
-
-    $(function () {
-        $(Auth.loginSelector).click(function () { navigator.id.request(); });
-        $(Auth.logoutSelector).click(function () { navigator.id.logout(); });
-    });
 
     var token = { "__RequestVerificationToken": $("[name='__RequestVerificationToken']").val() };
 
