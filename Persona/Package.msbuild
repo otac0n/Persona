@@ -2,16 +2,16 @@
   <Import Project="$(SolutionDir)Version.msbuild" />
   <Target Name="AfterBuild">
     <RemoveDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg" />
-    <MakeDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg;obj\$(Configuration)\pkg\content;obj\$(Configuration)\pkg\content\App_Start;obj\$(Configuration)\pkg\content\Controllers;obj\$(Configuration)\pkg\content\Scripts;obj\$(Configuration)\pkg\content\View;obj\$(Configuration)\pkg\content\View\Auth;obj\$(Configuration)\pkg\lib" />
+    <MakeDir ContinueOnError="true" Directories="obj\$(Configuration)\pkg;obj\$(Configuration)\pkg\content;obj\$(Configuration)\pkg\content\App_Start;obj\$(Configuration)\pkg\content\Controllers;obj\$(Configuration)\pkg\content\Scripts;obj\$(Configuration)\pkg\content\View;obj\$(Configuration)\pkg\content\View\Auth;obj\$(Configuration)\pkg\lib;obj\$(Configuration)\pkg\lib\net45" />
     <Copy SourceFiles="..\license.md" DestinationFolder="obj\$(Configuration)\pkg" />
     <Copy SourceFiles="readme.txt" DestinationFolder="obj\$(Configuration)\pkg" />
     <Copy SourceFiles="Web.config.transform" DestinationFolder="obj\$(Configuration)\pkg\content" />
     <Copy SourceFiles="..\PersonaExample\Scripts\persona.js" DestinationFolder="obj\$(Configuration)\pkg\content\Scripts" />
     <Copy SourceFiles="..\PersonaExample\Views\Auth\Index.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\Views\Auth" />
     <Copy SourceFiles="..\PersonaExample\Views\Auth\Token.cshtml" DestinationFolder="obj\$(Configuration)\pkg\content\Views\Auth" />
-    <Copy SourceFiles="bin\$(Configuration)\Persona.dll" DestinationFolder="obj\$(Configuration)\pkg\lib" />
-    <Copy SourceFiles="bin\$(Configuration)\Persona.pdb" DestinationFolder="obj\$(Configuration)\pkg\lib" />
-    <Copy SourceFiles="bin\$(Configuration)\Persona.xml" DestinationFolder="obj\$(Configuration)\pkg\lib" />
+    <Copy SourceFiles="bin\$(Configuration)\Persona.dll" DestinationFolder="obj\$(Configuration)\pkg\lib\net45" />
+    <Copy SourceFiles="bin\$(Configuration)\Persona.pdb" DestinationFolder="obj\$(Configuration)\pkg\lib\net45" />
+    <Copy SourceFiles="bin\$(Configuration)\Persona.xml" DestinationFolder="obj\$(Configuration)\pkg\lib\net45" />
     <PropertyGroup>
       <AuthController>$([System.IO.File]::ReadAllText("..\PersonaExample\Controllers\AuthController.cs").Replace("PersonaExample", "$rootnamespace$"))</AuthController>
       <NuSpec>$([System.IO.File]::ReadAllText("Persona.nuspec").Replace("$version$", $(PersonaVersion)).Replace("$version-short$", $(PersonaVersionShort)))</NuSpec>
