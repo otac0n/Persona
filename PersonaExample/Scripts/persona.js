@@ -1,8 +1,26 @@
 ﻿var Auth = Auth || {};
 (function ($, undefined) {
+    var defaults = {
+        success: function (action) {
+            window.location.reload(true);
+        },
+        error: function (err, action) {
+            window.location.reload(true);
+        },
+        loginSelector: '.login',
+        logoutSelector: '.logout',
+        loginUrl: '/auth/login',
+        logoutUrl: '/auth/logout'
+    };
+    for (var k in defaults) {
+        if (typeof Auth[k] !== typeof defaults[k]) {
+            Auth[k] = defaults[k];
+        }
+    }
+
     $(function () {
-        $('.login').click(function () { navigator.id.request(); });
-        $('.logout').click(function () { navigator.id.logout(); });
+        $(Auth.loginSelector).click(function () { navigator.id.request(); });
+        $(Auth.logoutSelector).click(function () { navigator.id.logout(); });
     });
 
     var token = { "__RequestVerificationToken": $("[name='__RequestVerificationToken']").val() };
@@ -12,27 +30,23 @@
         onlogin: function (assertion) {
             $.ajax({
                 type: 'POST',
-                url: '/auth/login',
-                data: $.extend({}, token, { assertion: assertion }),
-                success: function (res, status, xhr) { window.location.reload(); },
+                url: Auth.loginUrl,
+                data: $.extend({ assertion: assertion }, token),
+                success: function (res, status, xhr) { Auth.success('login'); },
                 error: function (xhr, status, err) {
                     navigator.id.logout();
-                    if (typeof Auth.error === "function") {
-                        Auth.error(err, 'login');
-                    }
+                    Auth.error(err, 'login');
                 }
             });
         },
         onlogout: function () {
             $.ajax({
                 type: 'POST',
-                url: '/auth/logout',
+                url: Auth.logoutUrl,
                 data: $.extend({}, token),
-                success: function (res, status, xhr) { window.location.reload(); },
+                success: function (res, status, xhr) { Auth.success('logout'); },
                 error: function (xhr, status, err) {
-                    if (typeof Auth.error === "function") {
-                        Auth.error(err, 'logout');
-                    }
+                    Auth.error(err, 'logout');
                 }
             });
         }
