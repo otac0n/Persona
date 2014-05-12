@@ -230,7 +230,7 @@ namespace Persona
 
             public override string ToString()
             {
-                return JsonConvert.SerializeObject(this, new JsonSerializerSettings
+                return JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 });
