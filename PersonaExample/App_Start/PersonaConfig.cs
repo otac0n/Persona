@@ -10,7 +10,6 @@
 
 namespace PersonaExample
 {
-    using System.Web.Helpers;
     using System.Web.Mvc;
     using Persona;
 
@@ -34,9 +33,6 @@ namespace PersonaExample
 
             // A flag indicating whether or not to use HTTPS-only cookies.  Change this to true if all of your authenticated requests use HTTPS exclusively.
             PersonaAuth.CookieSecure = false;
-
-            // Turns off username checks for anti-forgery tokens.  Change this to false if you have specific security requirements that require you to do so.
-            AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
         }
     }
 }

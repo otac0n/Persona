@@ -94,5 +94,14 @@ namespace PersonaExample.Controllers
 
             return new HttpStatusCodeResult(HttpStatusCode.OK, "OK");
         }
+
+        /// <summary>
+        /// Allows client-side scripts to refresh their CSRF token.
+        /// </summary>
+        /// <returns>A <see cref="PartialViewResult"/> object.</returns>
+        public ActionResult Token()
+        {
+            return this.PartialView();
+        }
     }
 }
