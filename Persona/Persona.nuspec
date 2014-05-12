@@ -5,6 +5,7 @@
     <version>$version$</version>
     <authors>John Gietzen</authors>
     <owners>John Gietzen</owners>
+    <projectUrl>https://github.com/otac0n/Persona</projectUrl>
     <description>An implementation of the BrowserID protocol, leveraging Mozilla's Persona implementation.</description>
     <tags>BrowserID Persona</tags>
     <dependencies>
