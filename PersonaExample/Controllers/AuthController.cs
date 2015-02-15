@@ -11,6 +11,7 @@ namespace PersonaExample.Controllers
     using System;
     using System.Net;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Mvc;
     using Persona;
 
@@ -68,7 +69,15 @@ namespace PersonaExample.Controllers
 
             this.Response.Cookies.Remove(PersonaAuth.CookieName);
             this.Response.AppendCookie(cookie);
-            return new HttpStatusCodeResult(HttpStatusCode.OK, "OK");
+
+            HttpCookie ignore;
+            var identity = this.auth.Authenticate(this.Response.Cookies, out ignore);
+            if (identity == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Internal Sever Error");
+            }
+
+            return this.Content(identity.Name);
         }
 
         /// <summary>

@@ -65,6 +65,7 @@
                 url: Auth.loginUrl,
                 data: { assertion: assertion },
                 success: function (res, status, xhr) {
+                    Auth.loggedInUser = xhr.responseText;
                     Auth.success('login');
                 },
                 error: function (xhr, status, err) {
@@ -79,6 +80,7 @@
                 url: Auth.logoutUrl,
                 data: {},
                 success: function (res, status, xhr) {
+                    Auth.loggedInUser = null;
                     Auth.success('logout');
                 },
                 error: function (xhr, status, err) {
