@@ -64,7 +64,9 @@
                 type: 'POST',
                 url: Auth.loginUrl,
                 data: { assertion: assertion },
-                success: function (res, status, xhr) { Auth.success('login'); },
+                success: function (res, status, xhr) {
+                    Auth.success('login');
+                },
                 error: function (xhr, status, err) {
                     navigator.id.logout();
                     Auth.error(err, 'login');
@@ -76,8 +78,12 @@
                 type: 'POST',
                 url: Auth.logoutUrl,
                 data: {},
-                success: function (res, status, xhr) { Auth.success('logout'); },
-                error: function (xhr, status, err) { Auth.error(err, 'logout'); }
+                success: function (res, status, xhr) {
+                    Auth.success('logout');
+                },
+                error: function (xhr, status, err) {
+                    Auth.error(err, 'logout');
+                }
             }, true);
         }
     });
